@@ -64,7 +64,7 @@ This defines two functions; `setup` and `loop`. These take no arguments and retu
 
 `setup` is run **once** when the controller is started up, and then `loop` is continually run "forever"
 
-Press the ✔ button (Compile) near the top left of the editor. This will "Compile" your Arduino code into machine code that can be run on the microcontroller. If you've made any mistakes then this step will fail, so this is a good way to make sure you're code is safe to try to put on the ESP32. (Pay attention to spelling, Case and semicolons!)
+Press the ✔ button (Compile) near the top left of the editor. This will "Compile" your Arduino code into machine code that can be run on the microcontroller. If you've made any mistakes then this step will fail, so this is a good way to make sure you're code is going to work on the ESP32 at all! (Pay attention to spelling, Case and semicolons!)
 
 Once your code safely compiles, save this sketch as "SerialTest".
 
@@ -134,7 +134,9 @@ A X: 0.2489  Y: 0.2919  Z: 10.1934  m/s^2
 M X: -39.9  Y: -55.0  Z: -16.1  uT
 
 A X: 0.2536  Y: 0.2919  Z: 10.1791  m/s^2
-M X: -39.7  Y: -54.8  Z: -16.1  uT```
+M X: -39.7  Y: -54.8  Z: -16.1  uT
+
+```
 
 Because we're getting *two* lines for each "observation", we're getting the spikes in the graph, as each line is jumping between being the Accelerometer values (lines beginning with `A`) and Magnetometer values (beginning with `M`)
 
