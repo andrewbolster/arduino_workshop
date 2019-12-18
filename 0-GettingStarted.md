@@ -86,6 +86,7 @@ In the Arduino IDE, navigate to **Tools > Manage Libraries** and install the fol
 * Adafruit FXOS8700
 * Adafruit FXAS21002C
 * Adafruit AHRS
+* Adafruit Unified Sensor
 
 These teach the Arduino platform how to talk to the the sensor chips on the motion sensor we'll wire up next, and how to combine these sensor values into a single, smoothed, orientation system.
 
