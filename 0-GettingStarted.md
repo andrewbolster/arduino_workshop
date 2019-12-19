@@ -194,7 +194,7 @@ If your sensor is *really* not making any sense; follow the instructions [here](
 
 # NeoPixels
 
-Back in Arduino land, from the **Tool Manager** install the "NeoPixel" library. 
+Back in Arduino land, from **Tools > Manage Libraries** install the "Adafruit NeoPixel" library. 
 
 Launch the **Examples > Neopixels > Simple Sketch**, read through the code to get an idea of what it's doing. 
 
@@ -204,12 +204,17 @@ Now strip the ends off the wires attached to the neopixel, connect the wires up 
 * GND (Black) > GND
 * IN (Purple) > D4
 
+Fixes: 
+* Check that the PIN variable is set to 4
+* Check that the NUMPIXELS variable is set to the same number of LED modules on your pixel ring/strip
+
 Challenges: 
 
 * How do you make it cycle? (i.e. all on-> all off -> Repeat)
 * How do you make it change colour?
 * How do you make it only one cell at a time?
 * Can you make a rotating rainbow?
+* Can you "daisy chain" the NeoPixels with another module? (hint; using the Yellow "OUT" pin as the "IN" pin for the next module)
 
 # WiFi
 
