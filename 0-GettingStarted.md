@@ -1,10 +1,3 @@
-# Hardware
-
-* [ESP32](https://smile.amazon.co.uk/gp/product/B071JR9WS9/) - Arduino Compatible Microprocessor board with Wifi and Bluetooth
-* [Adafruit FXOS8700+FXAS21002](https://coolcomponents.co.uk/products/precision-nxp-9-dof-breakout-board-fxos8700-fxas21002) - 9-DOF Orientation sensor
-* [NeoRing](https://coolcomponents.co.uk/products/12-led-ring-sk6812-5050-rgb-led-with-integrated-drivers-adafruit-neopixel-compatible) 12 segment ring chainable ring of individually addressable RGB LEDs
-* Double-wide breadboard
-* Micro USB cable
 
 # Introduction
 
@@ -22,6 +15,15 @@ The structure of this workshop enables both instructor led and self-driven learn
 By the end of it, the training wheels are off and you will be expected to be able to Google your way out of a paper bag. The mentors are around to help out so ask all the questions you like! We're here to help!
 
 # First Steps
+
+## Hardware
+
+* [ESP32](https://smile.amazon.co.uk/gp/product/B071JR9WS9/) - Arduino Compatible Microprocessor board with Wifi and Bluetooth
+* [Adafruit FXOS8700+FXAS21002](https://coolcomponents.co.uk/products/precision-nxp-9-dof-breakout-board-fxos8700-fxas21002) - 9-DOF Orientation sensor
+* [NeoRing](https://coolcomponents.co.uk/products/12-led-ring-sk6812-5050-rgb-led-with-integrated-drivers-adafruit-neopixel-compatible) 12 segment ring chainable ring of individually addressable RGB LEDs
+* Double-wide breadboard
+* Micro USB cable
+
 
 ## Setting up the development environment
 
@@ -202,11 +204,11 @@ Now strip the ends off the wires attached to the neopixel, connect the wires up 
 
 * PWR (Red) > VIN
 * GND (Black) > GND
-* IN (Purple) > D4
+* IN (Purple) > D25
 
 Fixes: 
-* Check that the PIN variable is set to 4
-* Check that the NUMPIXELS variable is set to the same number of LED modules on your pixel ring/strip
+* Check that the PIN variable is set to 25
+* Check that the NUMPIXELS variable is set to the same number of LED modules on your pixel ring/strip (16)
 
 Challenges: 
 
