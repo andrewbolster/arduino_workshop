@@ -152,6 +152,9 @@ void loop() {
 }
 ```
 
+	</p>
+</details>
+
 ### Extension: Random with Random Colours
 
 ### Extension: Random Fill
@@ -194,6 +197,9 @@ void loop() {
   }
 }
 ```
+
+	</p>
+</details>
 
 ### Extension: Alternate Colours
 
@@ -245,6 +251,9 @@ void loop() {
   }
 }
 ```
+
+	</p>
+</details>
 
 ### Extension: Looping Line
 
