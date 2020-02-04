@@ -299,7 +299,7 @@ Look for the documentation for the Adafruit NeoPixel library and see if there is
 <details>
 	<summary>Hint</summary>
 	
-	`fill()`
+`fill()`
 	
 </details>
 
@@ -419,7 +419,7 @@ This is similar to the solution form the 'Extension: Looping Line' hint...
 void rainbow(uint8_t wait) {
   for(int j=0; j<256; j++) {
     for(int i=0; i<pixels.numPixels(); i++) {
-	  strip.setPixelColor((i+j) % pixels.numPixels(), 
+	  pixels.setPixelColor((i+j) % pixels.numPixels(), 
 	  	ColourWheel(
 	  		map(i,
 	  			 0,pixels.numPixels(),
@@ -446,4 +446,354 @@ When moving on to the Matrix challenges, these are best accomplished in teams of
 
 **Be very careful about the wiring of the matrix displays as they are different than the strips; Check with Andrew before powering anything on!**
 
+Remember the Layout of LED's in the Matrix
 
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Row/Col</th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+      <th>5</th>
+      <th>6</th>
+      <th>7</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>1</td>
+      <td>2</td>
+      <td>3</td>
+      <td>4</td>
+      <td>5</td>
+      <td>6</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>8</td>
+      <td>9</td>
+      <td>10</td>
+      <td>11</td>
+      <td>12</td>
+      <td>13</td>
+      <td>14</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>16</td>
+      <td>17</td>
+      <td>18</td>
+      <td>19</td>
+      <td>20</td>
+      <td>21</td>
+      <td>22</td>
+      <td>23</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>24</td>
+      <td>25</td>
+      <td>26</td>
+      <td>27</td>
+      <td>28</td>
+      <td>29</td>
+      <td>30</td>
+      <td>31</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>32</td>
+      <td>33</td>
+      <td>34</td>
+      <td>35</td>
+      <td>36</td>
+      <td>37</td>
+      <td>38</td>
+      <td>39</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>40</td>
+      <td>41</td>
+      <td>42</td>
+      <td>43</td>
+      <td>44</td>
+      <td>45</td>
+      <td>46</td>
+      <td>47</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>48</td>
+      <td>49</td>
+      <td>50</td>
+      <td>51</td>
+      <td>52</td>
+      <td>53</td>
+      <td>54</td>
+      <td>55</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>56</td>
+      <td>57</td>
+      <td>58</td>
+      <td>59</td>
+      <td>60</td>
+      <td>61</td>
+      <td>62</td>
+      <td>63</td>
+    </tr>
+  </tbody>
+</table>
+
+## Spiral
+
+Starting from the `0`th pixel moving clockwise, draw a spiral
+
+(This is hard... If you're getting tight for time, skip this one)
+
+<details>
+	<summary>Solution</summary>
+
+```cpp
+
+#define SIDE 8
+
+void spiral(int top_left, int bottom_right, int side, uint32_t color, int d){
+  if (side>0){
+    // Go around the 'outside' of this square
+    for (int i=top_left; i<(top_left+side)-1; i++){
+      pixels.setPixelColor(i, color);
+      pixels.show();
+      delay(d);
+    }
+    for (int i=(top_left+side)-1; i<bottom_right; i+=SIDE){
+      pixels.setPixelColor(i, color);
+      pixels.show();
+      delay(d);
+    }
+    for (int i=bottom_right; i>(bottom_right-side+1); i--){
+      pixels.setPixelColor(i, color);
+      pixels.show();
+      delay(d);
+    }
+    for (int i=(bottom_right-side+1); i>top_left; i-=SIDE){
+      pixels.setPixelColor(i, color);
+      pixels.show();
+      delay(d);
+    }
+    spiral(top_left+SIDE+1, bottom_right-SIDE-1, side-2, color, d);
+  }
+}
+
+void loop() {
+  pixels.clear(); // Set all pixel colors to 'off'
+
+  // To draw a spiral, we go 
+  spiral(0,63,8,pixels.Color(0,5,0),10);
+  delay(500);
+}
+```
+</details>
+
+### Extension: Rainbow Spiral
+
+<details>
+	<summary>Hint</summary>
+See if you can steal a function from previous rainbows and reuse it instead of building a new one from scratch
+</details>
+
+<details>
+	<summary>Solution</summary>
+	
+```cpp
+
+#define SIDE 8
+
+// Input a value 0 to 255 to get a color value.
+// The colours are a transition r - g - b - back to r.
+uint32_t ColourWheel(byte WheelPos) {
+  if(WheelPos < 85) {    //first 1/3rd of a colourwheel (Red to Green)
+    return pixels.Color(
+      WheelPos * 3, 
+      255 - WheelPos * 3, 
+      0
+    );
+  } 
+  else if(WheelPos < 170) {//middle 1/3rd of a colourwheel (Green to Blue)
+    WheelPos -= 85;
+    return pixels.Color(
+      255 - WheelPos * 3, 
+      0, 
+      WheelPos * 3
+    );
+  } 
+  else {            //last 1/3rd of a colourwheel (Blue to Red)
+    WheelPos -= 170;
+    return pixels.Color(
+      0, 
+      WheelPos * 3, 
+      255 - WheelPos * 3
+    );
+  }
+}
+
+void spiral(int top_left, int bottom_right, int side, int d){
+  // At each start; we have done SIDE-side loops
+  int path_distance = 0;
+  for (int i=SIDE-1; i>side;i-=2){
+    path_distance+=i;
+  }
+  path_distance *=4;
+  
+  if (side>0){
+    // Go around the 'outside' of this square
+    for (int i=top_left; i<(top_left+side)-1; i++){
+      pixels.setPixelColor(i, 
+        ColourWheel(map(path_distance, 0,SIDE*SIDE,0,255))
+      );
+      path_distance+=1;
+      pixels.show();
+      delay(d);
+    }
+    for (int i=(top_left+side)-1; i<bottom_right; i+=SIDE){
+      pixels.setPixelColor(i, 
+        ColourWheel(map(path_distance, 0,SIDE*SIDE,0,255))
+      );
+      path_distance+=1;
+      pixels.show();
+      delay(d);
+    }
+    for (int i=bottom_right; i>(bottom_right-side+1); i--){
+      pixels.setPixelColor(i, 
+        ColourWheel(map(path_distance, 0,SIDE*SIDE,0,255))
+      );
+      path_distance+=1;
+      pixels.show();
+      delay(d);
+    }
+    for (int i=(bottom_right-side+1); i>top_left; i-=SIDE){
+       pixels.setPixelColor(i, 
+        ColourWheel(map(path_distance, 0,SIDE*SIDE,0,255))
+      );
+      path_distance+=1;
+      pixels.show();
+      delay(d);
+    }
+    spiral(top_left+SIDE+1, bottom_right-SIDE-1, side-2, d);
+  }
+}
+
+void loop() {
+  pixels.clear(); // Set all pixel colors to 'off'
+
+  // To draw a spiral, we go 
+  spiral(0,63,8,10);
+  delay(500);
+}
+```
+
+</details>
+
+## Text Scrolling
+Using **Tools>Manage Libraries**, add the `Adafruit NeoMatrix` library
+
+Using the online documentation, work out a sketch for how to use it to make it scroll the text "FutureLabs" across the display.
+
+<details>
+	<summary>Hint</summary>
+
+The NeoMatrix Library has some more examples that you might be able to use as the basis for this challenge... But it needs several tweaks!
+
+</details>
+
+<details>
+	<summary>Solution</summary>
+This is a solution based off the `matrixtest` example shown for completeness.
+
+```cpp
+// Adafruit_NeoMatrix example for single NeoPixel Shield.
+// Scrolls 'Howdy' across the matrix in a portrait (vertical) orientation.
+
+#include <Adafruit_GFX.h>
+#include <Adafruit_NeoMatrix.h>
+#include <Adafruit_NeoPixel.h>
+#ifndef PSTR
+ #define PSTR // Make Arduino Due happy
+#endif
+
+#define PIN 3
+
+// MATRIX DECLARATION:
+// Parameter 1 = width of NeoPixel matrix
+// Parameter 2 = height of matrix
+// Parameter 3 = pin number (most are valid)
+// Parameter 4 = matrix layout flags, add together as needed:
+//   NEO_MATRIX_TOP, NEO_MATRIX_BOTTOM, NEO_MATRIX_LEFT, NEO_MATRIX_RIGHT:
+//     Position of the FIRST LED in the matrix; pick two, e.g.
+//     NEO_MATRIX_TOP + NEO_MATRIX_LEFT for the top-left corner.
+//   NEO_MATRIX_ROWS, NEO_MATRIX_COLUMNS: LEDs are arranged in horizontal
+//     rows or in vertical columns, respectively; pick one or the other.
+//   NEO_MATRIX_PROGRESSIVE, NEO_MATRIX_ZIGZAG: all rows/columns proceed
+//     in the same order, or alternate lines reverse direction; pick one.
+//   See example below for these values in action.
+// Parameter 5 = pixel type flags, add together as needed:
+//   NEO_KHZ800  800 KHz bitstream (most NeoPixel products w/WS2812 LEDs)
+//   NEO_KHZ400  400 KHz (classic 'v1' (not v2) FLORA pixels, WS2811 drivers)
+//   NEO_GRB     Pixels are wired for GRB bitstream (most NeoPixel products)
+//   NEO_GRBW    Pixels are wired for GRBW bitstream (RGB+W NeoPixel products)
+//   NEO_RGB     Pixels are wired for RGB bitstream (v1 FLORA pixels, not v2)
+
+
+// Example for NeoPixel Shield.  In this application we'd like to use it
+// as a 5x8 tall matrix, with the USB port positioned at the top of the
+// Arduino.  When held that way, the first pixel is at the top right, and
+// lines are arranged in columns, progressive order.  The shield uses
+// 800 KHz (v2) pixels that expect GRB color data.
+Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix(8, 8, PIN,
+  NEO_MATRIX_TOP     + NEO_MATRIX_LEFT +
+  NEO_MATRIX_ROWS + NEO_MATRIX_PROGRESSIVE,
+  NEO_GRB            + NEO_KHZ800);
+
+const uint16_t colors[] = {
+  matrix.Color(255, 0, 0), matrix.Color(0, 255, 0), matrix.Color(0, 0, 255) };
+
+void setup() {
+  matrix.begin();
+  matrix.setTextWrap(false);
+  matrix.setBrightness(40);
+  matrix.setTextColor(colors[0]);
+}
+
+int x    = matrix.width();
+int pass = 0;
+
+void loop() {
+  matrix.fillScreen(0);
+  matrix.setCursor(x, 0);
+  matrix.print(F("FutureLabs"));
+  if(--x < -(matrix.width()*8)) {
+    x = matrix.width();
+    if(++pass >= 3) pass = 0;
+    matrix.setTextColor(colors[pass]);
+  }
+  matrix.show();
+  delay(100);
+}
+```
+</details>
+
+
+# Wrapup/Free for all
+
+Where do you want to go next? 
+
+Discuss your ideas and explore the possibilities!
