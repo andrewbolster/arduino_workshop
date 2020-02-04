@@ -72,14 +72,31 @@ void loop() {
 }
 ```
 
+## Rings, Strips and Matrixes
 
-# Challenges
+Fundamentally there is no difference between the Rings, Strips and Matrixes other than the number of and physical layout of LED modules.
+
+In all cases, NeoPixel kits can be "Daisy Chained", so if you have two strips of 60 LED's each and you connect them together, you can address pixels from 0-120.
+
+They are all numbered from 0-N, which makes sense for the Rings and the Strips, but for the Matrix, the layout is a bit more subtle, but might give you some inspiration for where to take your projects next!
+
+![Matrix](img/leds_shield-horiz.jpg)
+
+The red circles module is the `0` module, the 'top right' module is number `7`, and the first module on the left of the second row is module `8`. This is much the same as how CRT's build up an image on their displays, and how LED/LCD monitors store their state in memory (as 'one' long line that we know the 'width' of)
+
+![raster](img/1280px-Raster-scan.png)
+
+
+# Ring/Strip Challenges
 
 All of these challenges have 'solutions' provided for them, but remember, there is more than one way to do things, and you should *not* check out the solutions until you've attempted the challenges yourself. And as always, Google is your friend!
 
 There are also optional unsolved 'Extensions' to challenges that might be interesting additions to existing challenges for you to explore
 
 Also feel free to explore your own 'extensions' to challenges and let Andrew know and he can add them to the next class!
+
+These challenges can be done using any of the Pixel Rings, Strips or Matrixes.
+
 
 ## SimpleSingle: "Simple" Ring with one light at a time
 
@@ -106,11 +123,12 @@ void loop() {
 
     delay(DELAYVAL); // Pause before next pass through loop
     
-    pixels.setPixelColor(i, pixels.Color(0, 150, 0)); // Turn this light off 
+    pixels.setPixelColor(i, pixels.Color(0, 0, 0)); // Turn this light off 
     // (this won't be applied to the strip until `pixels.show()` is called in the next loop
   }
 }
 ```
+
 	</p>
 	
 </details>
@@ -125,9 +143,9 @@ What do you have to change to adapt the original "simple" code (or indeed, your 
 </details>
 <details>
 	<summary>Solution</summary>
-	<p>
-	Update the `#define NUMPIXELS` value defined at near the top of the sketch to _60_ for the pixel strip
-	</p>
+	
+Update the `#define NUMPIXELS` value defined at near the top of the sketch to _60_ for the pixel strip
+	
 </details>
 
 ## Random: 
@@ -136,7 +154,6 @@ Turn random LED's on and off
 
 <details>
 	<summary>Solution</summary>
-	<p>
 	
 Sometimes it's better to keep things simple!
 
@@ -152,12 +169,33 @@ void loop() {
 }
 ```
 
-	</p>
 </details>
 
 ### Extension: Random with Random Colours
 
+<details>
+	<summary>Hint</summary>
+
+Arduino has a built in `random(N)` function where `N` is the maximum possible number, so `random(10)` will return random numbers between 0-10
+
+</details>
+
+
 ### Extension: Random Fill
+
+Instead of "clearing" the `pixels` on each random LED activation, allow the selection of random LED's on the strip (with random colours too if you like!) until the strip is filled, and then clear it and start again.
+
+How do you keep track of what Pixels are on and off? How do you know they're all off? It's not very efficient to randomly pick as you'll regularly pick LED's that are already on. 
+
+Now, that effect is pretty cool on it's own, but try to work out a way to rapidly 'guess' random pixels, check if they're on or not, and if they're already on, move on to the next one.
+
+<details>
+	<summary>Hint</summary>
+
+`pixels.getPixelColor(i)`
+
+</details>
+
 
 ## Even/Odd
 
@@ -165,7 +203,6 @@ All at once, turn every other LED (0,2,4,6,8, etc) on and off, then turn the alt
 
 <details>
 	<summary>Solution</summary>
-	<p>
 	
 Above the `setup()` function add
 
@@ -198,7 +235,6 @@ void loop() {
 }
 ```
 
-	</p>
 </details>
 
 ### Extension: Alternate Colours
@@ -219,7 +255,7 @@ When we did "Simple Single", we had one LED 'moving' up the strip. How could we 
 
 <details>
 	<summary>Solution</summary>
-	<p>
+
 Above the `setup()` function add
 
 ```cpp
@@ -245,27 +281,169 @@ void loop() {
     delay(DELAYVAL); // Pause before next pass through loop
 
     // turn off the LED 'CHASE' elements behind me
-    if (i>CHASE){
-      pixels.setPixelColor(i-CHASE, pixels.Color(0, 0, 0));
+    if (i>(CHASE-1)){
+      pixels.setPixelColor(i-(CHASE-1), pixels.Color(0, 0, 0));
     }
   }
 }
 ```
 
-	</p>
+Why is this using `(CHASE-1)` instead of just `CHASE`?
+
+</details>
+
+### Extension: Read The Docs
+
+Look for the documentation for the Adafruit NeoPixel library and see if there is a better way to accomplish this.
+
+<details>
+	<summary>Hint</summary>
+	
+	`fill()`
+	
 </details>
 
 ### Extension: Looping Line
 
 When the "block" gets to the end of the strip, make it continue "around" the strip as if the strip was in a ring, so there are always 5 LED's active.
 
+<details>
+	<summary>Hint</summary>
+	
+![formula](https://render.githubusercontent.com/render/math?math=mod(59,60)=59)
+
+![formula](https://render.githubusercontent.com/render/math?math=mod(60,60)=0)
+
+![formula](https://render.githubusercontent.com/render/math?math=mod(61,60)=1)
+
+[Extra Link](https://www.arduino.cc/reference/en/language/structure/arithmetic-operators/modulo/)
+
+</details>
+
 ### Extension: Bouncing Line
 
-When the "block" gets to the end of the strip, make it "bounce back" and come backwards down the line instead of looping "around" the strip
+When the "block" gets to the end of the strip, make it "bounce back" and come backwards down the line instead of just looping "around" the strip
+
+<details>
+	<summary>Hint</summary>
+
+What goes `i++`, must go `i--`
+
+</details>
 
 ## Rainbow
 
+Given that we know that our `pixels.Color(red,green,blue)` function lets us create specific colours for pixels, how can we generate a smooth 'rainbow' of colours, 
+
+<details>
+	<summary>Hint</summary>
+
+![](img/colourwheel.png)
+</details>
+
+<details>
+	<summary>Solution</summary>
+	
+This time it makes more sense to break things out into "functions" rather than having it all in one `loop()`
+
+A few things to note:
+
+* `uint32_t` means "unsigned 32-bit integer" so it can store values from 0-4294967295. This might seem like a random number but it might be more familiar in it's hexadecimal form; 0xFFFFFFFF. This is enough room to store RGBA (Red, Green, Blue, Alpha) values in one "number" to save space, and is the same thing that has been "returned" by our previous calls to `pixels.Color()`
+* 0-255 is a range of values that can be stored in 8-bits cleanly. We could use "0-360" or "0-100" however this would produce edge cases related to decimal places that would be very very messy...
+* There is a built in arduino function called `map` that translates from one range to an other; i.e. we have 60 pixels on the strip, and our `ColourWheel` function goes from 0-255, so we need to convert our "pixel id" into the relevant "colour id" 
+
+```cpp
+
+// Input a value 0 to 255 to get a color value.
+// The colours are a transition r - g - b - back to r.
+uint32_t ColourWheel(byte WheelPos) {
+  if(WheelPos < 85) {		//first 1/3rd of a colourwheel (Red to Green)
+    return pixels.Color(
+    	WheelPos * 3, 
+    	255 - WheelPos * 3, 
+    	0
+    );
+  } 
+  else if(WheelPos < 170) {//middle 1/3rd of a colourwheel (Green to Blue)
+    WheelPos -= 85;
+    return pixels.Color(
+    	255 - WheelPos * 3, 
+    	0, 
+    	WheelPos * 3
+    );
+  } 
+  else {						//last 1/3rd of a colourwheel (Blue to Red)
+    WheelPos -= 170;
+    return pixels.Color(
+    	0, 
+    	WheelPos * 3, 
+    	255 - WheelPos * 3
+    );
+  }
+}
+
+// Generate a rainbow across the array
+void loop() {
+	for(int i=0; i<pixels.numPixels(); i++) {
+	  strip.setPixelColor(i, 
+	  	ColourWheel(
+	  		map(i,
+	  			 0,pixels.numPixels(),
+	  			 0,255
+	  		)
+	  	);
+	}
+	pixels.show();
+	delay(100)
+}
+
+```
+
+</details>
+
 ## Rolling Rainbow
 
+How can you adapt the Rainbow to that it continuously 'slides' across the strip?
+
+<details>
+	<summary>Hint</summary>
+	
+This is similar to the solution form the 'Extension: Looping Line' hint...
+
+</details>
+	
+<details>
+	<summary>Solution</summary>
+	
+```cpp
+void rainbow(uint8_t wait) {
+  for(int j=0; j<256; j++) {
+    for(int i=0; i<pixels.numPixels(); i++) {
+	  strip.setPixelColor((i+j) % pixels.numPixels(), 
+	  	ColourWheel(
+	  		map(i,
+	  			 0,pixels.numPixels(),
+	  			 0,255
+	  		)
+	  	);
+    }
+    pixels.show();
+    delay(wait);
+  }
+}
+
+void loop() {
+   rainbow(10);
+   delay(10);
+}
+```
+
+</details>
+
+# Matrix Challenges
+
+When moving on to the Matrix challenges, these are best accomplished in teams of three, as the experimentation is a bit more involved (and we have fewer Matrix displays than Strips as they're more expensive...)
+
+**Be very careful about the wiring of the matrix displays as they are different than the strips; Check with Andrew before powering anything on!**
 
 
