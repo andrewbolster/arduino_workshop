@@ -104,7 +104,6 @@ Starting off with the `simple` example, either based on the above code or from t
 
 <details>
 	<summary>Solution</summary>
-	<p>
 	
 ```cpp
 // This section is run repeatedly forever after setup() has completed
@@ -128,8 +127,6 @@ void loop() {
   }
 }
 ```
-
-	</p>
 	
 </details>
 
@@ -139,8 +136,11 @@ What do you have to change to adapt the original "simple" code (or indeed, your 
 
 <details>
 	<summary>Hint</summary>
-	<p>The NeoPixel Strip has 60 LED's and the NeoMatrix has 64 LEDs</p>
+	
+The NeoPixel Strip has 60 LED's and the NeoMatrix has 64 LEDs
+
 </details>
+
 <details>
 	<summary>Solution</summary>
 	
